@@ -1,5 +1,5 @@
 {
-  "name": "backend-template",
+  "name": "sba319",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "crystal robinson",
   "license": "ISC",
   "description": "",
   "dependencies": {

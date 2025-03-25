@@ -1,30 +1,50 @@
-import express from 'express';
-import morgan from 'morgan';
-import helmet from 'helmet';
-import dotenv from 'dotenv';
-import cors from 'cors';
+import express from "express";
+import morgan from "morgan";
+import helmet from "helmet";
+import dotenv from "dotenv";
+import cors from "cors";
+import mongoose from "mongoose";
+
+// Routers
+import { healthRouter } from "./routes/health.js";
+
 dotenv.config();
-console.log(process.env.MONGODB_URI);
+// console.log(process.env.MONGODB_URI);
+
+// Connect to MongoDB
+await mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((e) => console.error(e));
 
 const PORT = process.env.PORT || 4000;
+
 const app = express();
 
-// set view engine
-app.set('views', './views')
-app.set('view engine', 'pug')
+// View Engine
+app.set("views", "./views");
+app.set("view engine", "pug");
 
-// middleware
-app.use(express.static('./public')) //serves static files and makes them available to the templates
-app.use(express.json()) //built in express middleware that parses json in req into req.body
-app.use(express.urlencoded({extended: true})) //built in express middleware that will parse info from url
-app.use(morgan('dev')); //logging middleware
-app.use(helmet()); // security middleware that makes server more secure
-app.use(cors())
+// Middlewares
+app.use(express.static("./public"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
+app.use(helmet());
+app.use(cors());
 
-app.get('/', (req, res) => {
-    res.render('index');
-})
+// Routes
+app.get("/", (req, res) => {
+  res.render("index");
+});
 
-app.listen(PORT, () => {
-    console.log(`Sever is running on port: ${PORT}`)
-})
+// API Routes
+app.use("/api/health", healthRouter);
+
+// Global error handling
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send("Seems like we messed up somewhere...");
+});
+
+app.listen(PORT, () => console.log(Server));
